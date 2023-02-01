@@ -1,0 +1,45 @@
+:root {
+    background-color: rgb(250, 245, 247);
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto Mono', monospace;
+
+
+}
+
+h1 {
+
+font-size: 70px;
+font-weight: lighter;
+color: rgb(31, 6, 6);
+
+}
+.container{
+    
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button {
+    font-size: 2rem;
+    padding: 2rem 0;
+    width: auto;
+    text-align: center;   
+    
+}
+
+.btn{ 
+    box-sizing: border-box;
+    text-align: center;
+    width: 300px;
+    height: 150px;
+    margin-bottom: 1rem;
+    color: rgb(20, 20, 63); 
+    box-shadow: 20px 10px 20px;
+    
+}
