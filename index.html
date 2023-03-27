@@ -1,32 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Quiz</title>
-    <link rel="stylesheet" href="./assets/reset.css">
+    <meta charset="UTF-8">
+    <title>Code Quiz</title>
     <link rel="stylesheet" href="./assets/style.css">
   </head>
   <body>
     <div class="container">
-      <div id="title" class="flex-column flex-center"></div>
-      <h1>Ready?</h1>
-    </div> 
-    
-    <div class="button">
-      <button class="btn">Start Quiz</button>
+      <div class="start">
+        <h1>Code Quiz</h1>
+        <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!</p>
+        <button class="button start-button">Start Quiz</button>
+      </div>
+
       <div class="quiz" hidden>
-        <h1></h1>
-        <ul></ul>
-        <button class="next" hidden>Next Question</button>
-        <div class="timer"></div>
-        <form class="form" hidden>
-          <input type="text" id="initials" placeholder="Enter your initials" required>
-          <button type="submit">Save score</button>
-        </form>
-        <div class="score" hidden></div>
+        <div class="quiz-header">
+          <h2 class="question-number"></h2>
+          <div class="time-remaining">Time: <span class="time"></span></div>
+        </div>
+        <h1 class="question"></h1>
+        <ul class="answers"></ul>
+        <button class="btn next-button" hidden>Next</button>
       </div>
     </div>
-    
+
     <script src="./assets/script.js"></script>
   </body>
 </html>

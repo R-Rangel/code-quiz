@@ -1,105 +1,105 @@
-var startButton = document.querySelector('.btn');
-var quizContainer = document.querySelector('.quiz');
-var questionElement = document.querySelector('.quiz h1');
-var answersElement = document.querySelector('.quiz ul');
-var nextButton = document.querySelector('.quiz button');
-
-var currentQuestionIndex = 0;
-var questions = [
+const questions = [
   {
-    question: "What is the capital of France?",
-    answers: ["London", "Paris", "Berlin"],
-    correctAnswerIndex: 1
+    question: "What is JavaScript?",
+    answers: ["A programming language", "A markup language", "A styling language"],
+    correctAnswer: 0
   },
   {
-    question: "What is the highest mountain in the world?",
-    answers: ["Mount Everest", "K2", "Kangchenjunga"],
-    correctAnswerIndex: 0
+    question: "What is a variable?",
+    answers: ["A container for storing data", "A function that returns a value", "A loop that repeats code"],
+    correctAnswer: 0
   },
   {
-    question: "What is the largest country in the world?",
-    answers: ["Russia", "Canada", "China"],
-    correctAnswerIndex: 0
+    question: "What is a function?",
+    answers: ["A block of code that performs a specific task", "A variable that stores an array", "A keyword that starts a loop"],
+    correctAnswer: 0
   }
 ];
-var score = 0;
-var timeLeft = 60;
-var timerInterval;
+const quizDuration = 60; 
+const wrongAnswerPenalty = 10; 
 
-function startQuiz(){
-  console.log('started');
-  startButton.setAttribute('hidden', '');
-  quizContainer.removeAttribute('hidden');
-  showQuestion(0);
+
+const startButton = document.querySelector(".start-button");
+const quizContainer = document.querySelector(".quiz");
+const questionNumberElement = document.querySelector(".question-number");
+const timeElement = document.querySelector(".time");
+const questionElement = document.querySelector(".question");
+const answersElement = document.querySelector(".answers");
+const nextButton = document.querySelector(".next-button");
+
+
+let currentQuestionIndex;
+let timeRemaining;
+let timerId;
+let score;
+
+startButton.addEventListener("click", startQuiz);
+
+
+function startQuiz() {
+ 
+  currentQuestionIndex = 0;
+  timeRemaining = quizDuration;
+  score = 0;
+ 
+  document.querySelector(".start").hidden = true;
+  quizContainer.hidden = false;
+ 
   startTimer();
+  displayQuestion();
 }
 
+
 function startTimer() {
-  timerInterval = setInterval(function() {
-    timeLeft--;
-    if (timeLeft <= 0) {
+  timerId = setInterval(() => {
+    timeRemaining--;
+    timeElement.textContent = timeRemaining;
+    if (timeRemaining <= 0) {
       endQuiz();
     }
   }, 1000);
 }
 
-function endQuiz() {
-  clearInterval(timerInterval);
+
+function displayQuestion() {
  
-  quizContainer.setAttribute('hidden', '');
-  console.log('quiz over');
+  const question = questions[currentQuestionIndex];
   
-  localStorage.setItem('quizScore', score);
-  var initials = prompt("Enter your initials to save your score:");
+  questionNumberElement.textContent = `Question ${currentQuestionIndex + 1}`;
+  questionElement.textContent = question.question;
   
-  localStorage.setItem('quizInitials', initials);
-  localStorage.setItem('quizScore', score);
+  answersElement.innerHTML = "";
+  for (const [index, answer] of question.answers.entries()) {
+    const li = document.createElement("li");
+    li.textContent = answer;
+    li.addEventListener("click", () => {
+      
+      if (index === question.correctAnswer) {
+        score++;
+      } else {
+        timeRemaining -= wrongAnswerPenalty;
+      }
+      
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        endQuiz();
+      }
+    });
+    answersElement.appendChild(li);
+  }
 }
+function endQuiz() {
+  clearInterval(timerId);
+  quizContainer.hidden = true;
 
-function nextQuestion(){
-  currentQuestionIndex++;
-  if (currentQuestionIndex >= questions.length) {
-    endQuiz();
-  } else {
-    showQuestion(currentQuestionIndex);
+  const initials = prompt(`Your score is ${score}. Enter your initials to save your score.`);
+
+  if (initials) {
+    const scores = JSON.parse(localStorage.getItem("quizScores")) || [];
+    scores.push({ initials, score });
+    localStorage.setItem("quizScores", JSON.stringify(scores));
   }
 }
 
-function answerSelect(event){
-  var selectedAnswerIndex = event.target.getAttribute('data-answer-index');
-  if (selectedAnswerIndex == questions[currentQuestionIndex].correctAnswerIndex) {
-   
-    score++;
-  } else {
-    
-    timeLeft -= 10;
-  }
-  
-  var answerButtons = answersElement.querySelectorAll('button');
-  for (var i = 0; i < answerButtons.length; i++) {
-    answerButtons[i].setAttribute('disabled', '');
-  }
-  
-  nextButton.removeAttribute('hidden');
-  
-  document.querySelector('.score').textContent = 'Score: ' + score;
-}
-
-function showQuestion(index){
-  var question = questions[index];
-  questionElement.textContent = "Question " + (index + 1) + ": " + questions[index].question;
-
-  answersElement.innerHTML = '';
-  for (var i = 0; i < question.answers.length; i++) {
-    var answer = question.answers[i];
-    var button = document.createElement('button');
-    button.textContent = answer;
-    button.setAttribute('data-answer-index', i);
-    button.onclick = answerSelect;
-    answersElement.appendChild(document.createElement('li').appendChild(button));
-  }
-  
-  nextButton.setAttribute('hidden', '');
-}
-
-startButton.addEventListener('click', startQuiz);
